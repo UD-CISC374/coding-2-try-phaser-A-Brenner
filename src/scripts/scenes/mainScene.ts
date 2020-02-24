@@ -66,8 +66,11 @@ export default class MainScene extends Phaser.Scene {
     this.ship2.play("ship2_anim");
     this.ship3.play("ship3_anim");
 
+    this.ship1.setInteractive();
+    this.ship2.setInteractive();
+    this.ship3.setInteractive();
 
-
+    this.input.on("gameobjectdown", this.destroyShip, this);
     //this.ship2.flipY = true;
     //this.ship1.setScale(2);
     //this.ship3.setScale(2);
@@ -83,6 +86,11 @@ export default class MainScene extends Phaser.Scene {
 
   }
 
+  destroyShip(pointer, gameObject){
+    gameObject.setTexture("explosion");
+    gameObject.play("explode");
+  }
+
   update() {
 
     //this.ship1.angle += 3;
@@ -95,7 +103,7 @@ export default class MainScene extends Phaser.Scene {
     }
   */
 
-    this.background.tilePositionY -= 0.5;
+    this.background.tilePositionY += 0.5;
 
   }
 
