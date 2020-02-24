@@ -8,9 +8,20 @@ export default class MainScene extends Phaser.Scene {
   }
 
   create() {
-    this.exampleObject = new ExampleObject(this, 0, 0);
+    //this.exampleObject = new ExampleObject(this, 0, 0);
+
+    this.background = this.add.image(0,0, "background");
+    this.background.setOrigin(0,0);
+
+    this.add.text(20,20,"Hellooooo world (^ ^)b", {
+      font: "20px Arial", 
+      fill: "blue"
+    });
+
+
   }
 
   update() {
   }
+
 }
