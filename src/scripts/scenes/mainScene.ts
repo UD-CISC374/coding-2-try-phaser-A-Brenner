@@ -21,10 +21,11 @@ export default class MainScene extends Phaser.Scene {
     this.background.setOrigin(0,0);
 
     this.make_ships();
+    
     /*
-    this.add.text(20,20,"Hellooooo world (^ ^)b", {
+    this.add.text(20,20,"Hey Dumpling (^ ^)b", {
       font: "20px Arial", 
-      fill: "blue"
+      fill: "cyan"
     });
     */
 
@@ -55,7 +56,7 @@ export default class MainScene extends Phaser.Scene {
       repeat: -1 // infinite loop
     });
     this.anims.create({
-      key: "explosion_anim", // creating animation called ship1_anim
+      key: "explode", // creating animation called ship1_anim
       frames: this.anims.generateFrameNumbers("explosion"), // use spritesheet ship
       frameRate: 20, // 20 frames per second
       repeat: 0, // infinite loop
@@ -70,10 +71,7 @@ export default class MainScene extends Phaser.Scene {
     this.ship2.setInteractive();
     this.ship3.setInteractive();
 
-    this.input.on("gameobjectdown", this.destroyShip, this);
-    //this.ship2.flipY = true;
-    //this.ship1.setScale(2);
-    //this.ship3.setScale(2);
+    this.input.on('gameobjectdown', this.destroyShip, this);
   }
 
   move_ship(ship, speed){
