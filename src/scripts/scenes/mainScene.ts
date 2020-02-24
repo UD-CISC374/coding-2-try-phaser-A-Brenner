@@ -22,6 +22,11 @@ export default class MainScene extends Phaser.Scene {
     this.ship2 = this.add.image(this.scale.width/2, this.scale.height/2, "ship2");
     this.ship3 = this.add.image(this.scale.width/2 + 50, this.scale.height/2, "ship3");
 
+    this.ship2.flipY = true;
+    this.ship1.setScale(2);
+    this.ship3.setScale(2);
+
+
     this.add.text(20,20,"Hellooooo world (^ ^)b", {
       font: "20px Arial", 
       fill: "blue"
@@ -31,6 +36,16 @@ export default class MainScene extends Phaser.Scene {
   }
 
   update() {
+
+    this.ship1.angle += 3;
+    this.ship3.angle -= 3;
+
+    if(this.ship2.y >= 0){
+      this.ship2.y -= 3
+    } else {
+      this.ship2.y = 272
+    }
+
   }
 
 }
