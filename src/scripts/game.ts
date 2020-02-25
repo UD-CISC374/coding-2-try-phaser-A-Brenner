@@ -6,6 +6,11 @@ import GameConfig = Phaser.Types.Core.GameConfig;
 const DEFAULT_WIDTH = 256; // 400
 const DEFAULT_HEIGHT = 272; // 400
 
+/*
+let gameSettings = {
+    playerSpeed: 200,
+}
+*/
 
 const config: GameConfig = {
     backgroundColor: '#ffffff',

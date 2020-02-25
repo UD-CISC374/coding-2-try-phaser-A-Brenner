@@ -1,5 +1,6 @@
 import ExampleObject from '../objects/exampleObject';
 import { timingSafeEqual } from 'crypto';
+import PreloadScene from './preloadScene';
 
 export default class MainScene extends Phaser.Scene {
   private exampleObject: ExampleObject;
@@ -8,6 +9,9 @@ export default class MainScene extends Phaser.Scene {
   ship2: Phaser.GameObjects.Sprite;
   ship3: Phaser.GameObjects.Sprite;
   powerUps: Phaser.Physics.Arcade.Group;
+  player: Phaser.Physics.Arcade.Sprite;
+  cursorKeys: Phaser.Types.Input.Keyboard.CursorKeys;
+  playerSpeed: 200;
 
 
   constructor() {
@@ -21,49 +25,22 @@ export default class MainScene extends Phaser.Scene {
     this.background = this.add.tileSprite(0,0, this.scale.width, this.scale.height, "background");
     this.background.setOrigin(0,0);
 
-    this.make_ships();
+    //this.make_ships();
     this.createPowerUpAnims()
-    
-    /*
-    this.add.text(20,20,"Hey Dumpling (^ ^)b", {
-      font: "20px Arial", 
-      fill: "cyan"
-    });
-    */
 
+    this.player = this.physics.add.sprite(this.scale.width / 2 - 8, this.scale.height - 64, "player");
+    this.player.play("thrust");
+    this.cursorKeys = this.input.keyboard.createCursorKeys();
+    this.player.setCollideWorldBounds(true);
 
   }
 
   make_ships(){
+    
     this.ship1 = this.add.sprite(this.scale.width/2 - 50, this.scale.height/2, "ship");
     this.ship2 = this.add.sprite(this.scale.width/2, this.scale.height/2, "ship2");
     this.ship3 = this.add.sprite(this.scale.width/2 + 50, this.scale.height/2, "ship3");
-
-    this.anims.create({
-      key: "ship1_anim", // creating animation called ship1_anim
-      frames: this.anims.generateFrameNumbers("ship"), // use spritesheet ship
-      frameRate: 20, // 20 frames per second
-      repeat: -1 // infinite loop
-    });
-    this.anims.create({
-      key: "ship2_anim", // creating animation called ship1_anim
-      frames: this.anims.generateFrameNumbers("ship2"), // use spritesheet ship
-      frameRate: 20, // 20 frames per second
-      repeat: -1 // infinite loop
-    });
-    this.anims.create({
-      key: "ship3_anim", // creating animation called ship1_anim
-      frames: this.anims.generateFrameNumbers("ship3"), // use spritesheet ship
-      frameRate: 20, // 20 frames per second
-      repeat: -1 // infinite loop
-    });
-    this.anims.create({
-      key: "explode", // creating animation called ship1_anim
-      frames: this.anims.generateFrameNumbers("explosion"), // use spritesheet ship
-      frameRate: 20, // 20 frames per second
-      repeat: 0, // infinite loop
-      hideOnComplete: true
-    });
+    
 
     this.ship1.play("ship1_anim");
     this.ship2.play("ship2_anim");
@@ -74,44 +51,11 @@ export default class MainScene extends Phaser.Scene {
     this.ship3.setInteractive();
 
     this.input.on('gameobjectdown', this.destroyShip, this);
+    
   }
 
-  move_ship(ship, speed){
-    ship.y -= 3;
-  }
-
-  resetShipPos(ship){
-    ship.y = this.scale.height;
-    ship.x = Phaser.Math.Between(0, this.scale.width);
-
-  }
-
-  destroyShip(pointer, gameObject){
-    gameObject.setTexture("explosion");
-    gameObject.play("explode");
-  }
-
+  
   createPowerUpAnims(){
-    this.anims.create({
-      key: "red",
-      frames: this.anims.generateFrameNumbers("power-up", {
-        start: 0,
-        end: 1
-      }),
-      frameRate: 20,
-      repeat: -1
-    });
-
-    this.anims.create({
-      key: "gray",
-      frames: this.anims.generateFrameNumbers("power-up", {
-        start: 2,
-        end: 3
-      }),
-      frameRate: 20,
-      repeat: -1
-    });
-
     // put each powerup in a group
     this.powerUps = this.physics.add.group();
 
@@ -132,25 +76,46 @@ export default class MainScene extends Phaser.Scene {
       powerUp.setCollideWorldBounds(true);
       powerUp.setBounce(1);
     }
-
-
-
   }
 
-  update() {
+  destroyShip(pointer, gameObject){
+    gameObject.setTexture("explosion");
+    gameObject.play("explode");
+  }
 
-    //this.ship1.angle += 3;
-    //this.ship3.angle -= 3;
-/*
-    if(this.ship2.y >= 0){
-      this.move_ship(this.ship2, 3);
-    } else {
-      this.resetShipPos(this.ship2)
-    }
+  /*
+  move_ship(ship, speed){
+    ship.y -= 3;
+  }
+
+  resetShipPos(ship){
+    ship.y = this.scale.height;
+    ship.x = Phaser.Math.Between(0, this.scale.width);
+  }
   */
 
+  
+
+  update() {
     this.background.tilePositionY += 0.5;
 
+    this.movePlayerManager();
   }
 
+  // keyboard logic to move player
+  movePlayerManager(){
+    if(this.cursorKeys.left.isDown){
+      this.player.setVelocityX(-200);
+      this.player.setVelocityY(0);
+    } else if(this.cursorKeys.right.isDown){
+      this.player.setVelocityX(200);
+      this.player.setVelocityY(0);
+    }else if(this.cursorKeys.up.isDown){
+      this.player.setVelocityY(-200);
+      this.player.setVelocityX(0);
+    }else if(this.cursorKeys.down.isDown){
+      this.player.setVelocityY(200);
+      this.player.setVelocityX(0);
+    }
+  } 
 }
