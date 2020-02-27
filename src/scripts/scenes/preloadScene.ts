@@ -13,7 +13,14 @@ export default class PreloadScene extends Phaser.Scene {
 
   create() {
     this.add.text(20,20, "Loading Game...");
-   
+    /*
+    this.anims.create({
+      key: "beam_anim",
+      frames: this.anims.generateFrameNumbers("explosion-og"),
+      frameRate: 20,
+      repeat: 0
+    });
+    */
     this.anims.create({
       key: "red",
       frames: this.anims.generateFrameNumbers("power-up", {
@@ -69,7 +76,10 @@ export default class PreloadScene extends Phaser.Scene {
   
 
   load_images(){
-    this.load.image("background", "assets/images/background.png");
+    //this.load.image("background", "assets/images/background.png");
+    this.load.image("space_background", "assets/images/space_background.png");
+    this.load.image("laser-beam1", "assets/images/laser-beam1.png")
+
     // loading ship images as spritesheets now
     //this.load.image("ship", "assets/images/ship.png");
     //this.load.image("ship2", "assets/images/ship2.png");
@@ -101,6 +111,12 @@ export default class PreloadScene extends Phaser.Scene {
       frameWidth: 16,
       frameHeight: 16
     });
+    /*
+    this.load.spritesheet("explosion-trans", "assets/spritesheets/explosion-og.png", {
+      frameWidth: 16,
+      frameHeight: 16
+    });
+    */
   }
 
 }
