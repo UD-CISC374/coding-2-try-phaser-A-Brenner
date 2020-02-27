@@ -10,11 +10,16 @@ export default class MainScene extends Phaser.Scene {
   ship3: Phaser.GameObjects.Sprite;
   powerUps: Phaser.Physics.Arcade.Group;
   player: Phaser.Physics.Arcade.Sprite;
+  explosion: Phaser.Physics.Arcade.Sprite;
   cursorKeys: Phaser.Types.Input.Keyboard.CursorKeys;
   playerSpeed: 200;
   spacebar: Phaser.Input.Keyboard.Key;
   projectiles: Phaser.GameObjects.Group;
   beam: Phaser.GameObjects.Image;
+  enter: Phaser.Input.Keyboard.Key;
+  scoreLabel: Phaser.GameObjects.Text;
+  scoreCount: number;
+  scoreCountLabel: Phaser.GameObjects.Text;
 
 
   constructor() {
@@ -22,32 +27,33 @@ export default class MainScene extends Phaser.Scene {
   }
 
   create() {
-    //this.exampleObject = new ExampleObject(this, 0, 0);
-
-    //this.background = this.add.image(0,0, "background");
     this.background = this.add.tileSprite(0,0, this.scale.width, this.scale.height, "space_background");
     this.background.setOrigin(0,0);
+    this.scoreLabel = this.add.text(0,0, "Score: ");
+    this.scoreCount = 0;
+    this.scoreCountLabel = this.add.text(60, 0, this.scoreCount.toString());
 
-    //this.make_ships();
     this.createPowerUpAnims()
 
-    this.player = this.physics.add.sprite(this.scale.width / 2 - 8, this.scale.height - 64, "player");
+    this.player = this.physics.add.sprite(this.scale.width / 2 - 8, this.scale.height - 64, "thrust");
     this.player.flipY = true;
     this.player.play("thrust");
     this.cursorKeys = this.input.keyboard.createCursorKeys();
     this.player.setCollideWorldBounds(true);
 
 
+    this.enter = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
     this.spacebar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
     this.projectiles = this.add.group();
 
     // adding collisions
     this.physics.add.collider(this.powerUps, this.powerUps);
-    this.physics.add.overlap(this.player, this.powerUps);
+    this.physics.add.overlap(this.player, this.powerUps, this.hurtPlayer, null, this);
 
 
   }
 
+  /*
   check_collisions(projectiles, powerUps){
     for(let i = 0; i < projectiles.getChildren().length; i++){
       for(let j = 0; j < powerUps.getChildren().length; j++){
@@ -56,27 +62,8 @@ export default class MainScene extends Phaser.Scene {
       }
     }
   }
-
-  /*
-  make_ships(){
-    this.ship1 = this.add.sprite(this.scale.width/2 - 50, this.scale.height/2, "ship");
-    this.ship2 = this.add.sprite(this.scale.width/2, this.scale.height/2, "ship2");
-    this.ship3 = this.add.sprite(this.scale.width/2 + 50, this.scale.height/2, "ship3");
-    
-
-    this.ship1.play("ship1_anim");
-    this.ship2.play("ship2_anim");
-    this.ship3.play("ship3_anim");
-
-    this.ship1.setInteractive();
-    this.ship2.setInteractive();
-    this.ship3.setInteractive();
-
-    this.input.on('gameobjectdown', this.destroyShip, this);
-  }
   */
 
-  
   createPowerUpAnims(){
     // put each powerup in a group
     this.powerUps = this.physics.add.group();
@@ -100,26 +87,32 @@ export default class MainScene extends Phaser.Scene {
     }
   }
 
-  destroyShip(pointer, gameObject){
-    gameObject.setTexture("explosion");
-    gameObject.play("explode");
-  }
-
-  explode(gameObject){
-    gameObject.setTexture("explosion");
-    gameObject.play("explode");
-  }
-
-  
- 
   /*
-  resetShipPos(ship){
-    ship.y = this.scale.height;
-    ship.x = Phaser.Math.Between(0, this.scale.width);
+  destroyShip(pointer, gameObject){
+    
+    gameObject.setTexture("explosion");
+    gameObject.play("explode");
   }
   */
 
-  
+
+  hurtPlayer(){
+    this.scoreCount -= 10;
+    let explosionX = this.player.x;
+    let explosionY = this.player.y;
+    this.explosion = this.physics.add.sprite(explosionX, explosionY, "explode");
+    this.explosion.x = explosionX;
+    this.explosion.y = explosionY;
+    this.explosion.play("explode");
+    this.respawnPlayer();
+  }
+
+  respawnPlayer(){
+    this.player.x = this.scale.width/2 - 8;
+    this.player.y = this.scale.height/2 - 8;
+    this.player.setVelocityX(0);
+    this.player.setVelocityY(0);
+  }
 
   update() {
     this.background.tilePositionY -= 0.5;
@@ -129,11 +122,18 @@ export default class MainScene extends Phaser.Scene {
     if (Phaser.Input.Keyboard.JustDown(this.spacebar)){
       this.shootBeam();
     }
+    if (Phaser.Input.Keyboard.JustDown(this.enter)){
+      this.respawnPlayer();
+    }
+
     
     for(let i = 0; i < this.projectiles.getChildren().length; i++){
       let beam = this.projectiles.getChildren()[i];
       this.moveBeam(beam);
     }
+
+    this.scoreCount += 1;
+    this.scoreCountLabel.setText(this.scoreCount.toString());
 
   }
 
@@ -159,20 +159,14 @@ export default class MainScene extends Phaser.Scene {
     this.beam = this.add.image(this.player.x, this.player.y, "laser-beam1");
     this.beam.setScale(0.05);
     this.projectiles.add(this.beam);
-    this.moveBeam(this.beam)
-
-    /*
-    this.beam = this.physics.add.sprite(this.player.x, this.player.y, "explosion-og");
-    this.beam.play("beam-anim");
-    this.beam.setVelocityY(-100);
-    this.projectiles.add(this.beam);
-    */
-    //let beam = new Beam(this);
   }
 
   // update posn of beam once it has been fired
   moveBeam(beam){
     beam.y -= 10;
+    if(beam.y <= 0){
+      beam.destroy();
+    }
   }
 
 }
