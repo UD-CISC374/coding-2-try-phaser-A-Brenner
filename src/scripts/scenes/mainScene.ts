@@ -49,20 +49,15 @@ export default class MainScene extends Phaser.Scene {
     // adding collisions
     this.physics.add.collider(this.powerUps, this.powerUps);
     this.physics.add.overlap(this.player, this.powerUps, this.hurtPlayer, null, this);
+    this.physics.add.collider(this.projectiles, this.powerUps, function(projectile, powerup){
+      projectile.destroy();
+      powerup.destroy();
+    }, null, this);
+
 
 
   }
 
-  /*
-  check_collisions(projectiles, powerUps){
-    for(let i = 0; i < projectiles.getChildren().length; i++){
-      for(let j = 0; j < powerUps.getChildren().length; j++){
-        
-        //if(projectiles.getChildren()[i].y >= )
-      }
-    }
-  }
-  */
 
   createPowerUpAnims(){
     // put each powerup in a group
@@ -114,6 +109,10 @@ export default class MainScene extends Phaser.Scene {
     this.player.setVelocityY(0);
   }
 
+  powerUpShot(){
+    this.scoreCount+= 10;
+  }
+
   update() {
     this.background.tilePositionY -= 0.5;
 
@@ -158,6 +157,7 @@ export default class MainScene extends Phaser.Scene {
   shootBeam(){
     this.beam = this.add.image(this.player.x, this.player.y, "laser-beam1");
     this.beam.setScale(0.05);
+    this.physics.add.existing(this.beam);
     this.projectiles.add(this.beam);
   }
 

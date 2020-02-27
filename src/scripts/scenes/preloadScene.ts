@@ -76,7 +76,7 @@ export default class PreloadScene extends Phaser.Scene {
   
 
   load_images(){
-    //this.load.image("background", "assets/images/background.png");
+    this.load.image("background", "assets/images/background.png");
     this.load.image("space_background", "assets/images/space_background.png");
     this.load.image("laser-beam1", "assets/images/laser-beam1.png")
 
