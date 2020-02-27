@@ -12,7 +12,7 @@ export default class MainScene extends Phaser.Scene {
   player: Phaser.Physics.Arcade.Sprite;
   explosion: Phaser.Physics.Arcade.Sprite;
   cursorKeys: Phaser.Types.Input.Keyboard.CursorKeys;
-  playerSpeed: 200;
+  playerSpeed: number = 200;
   spacebar: Phaser.Input.Keyboard.Key;
   projectiles: Phaser.GameObjects.Group;
   beam: Phaser.GameObjects.Image;
@@ -20,6 +20,7 @@ export default class MainScene extends Phaser.Scene {
   scoreLabel: Phaser.GameObjects.Text;
   scoreCount: number;
   scoreCountLabel: Phaser.GameObjects.Text;
+  round: number = 1;
 
 
   constructor() {
@@ -33,7 +34,8 @@ export default class MainScene extends Phaser.Scene {
     this.scoreCount = 0;
     this.scoreCountLabel = this.add.text(60, 0, this.scoreCount.toString());
 
-    this.createPowerUpAnims()
+    this.powerUps = this.physics.add.group();
+    this.createPowerUpAnims(this.round);
 
     this.player = this.physics.add.sprite(this.scale.width / 2 - 8, this.scale.height - 64, "thrust");
     this.player.flipY = true;
@@ -49,22 +51,17 @@ export default class MainScene extends Phaser.Scene {
     // adding collisions
     this.physics.add.collider(this.powerUps, this.powerUps);
     this.physics.add.overlap(this.player, this.powerUps, this.hurtPlayer, null, this);
-    this.physics.add.collider(this.projectiles, this.powerUps, function(projectile, powerup){
+    this.physics.add.overlap(this.projectiles, this.powerUps, function(projectile, powerup){
       projectile.destroy();
       powerup.destroy();
     }, null, this);
-
-
-
   }
 
 
-  createPowerUpAnims(){
+  createPowerUpAnims(numObjects){
     // put each powerup in a group
-    this.powerUps = this.physics.add.group();
-
-    let maxObjects: number = 4;
-    for(let i = 0; i<= maxObjects; i++){
+    let maxObjects: number = numObjects;
+    for(let i = 0; i < maxObjects; i++){
       let powerUp = this.physics.add.sprite(16,16, "power-up");
       this.powerUps.add(powerUp);
       powerUp.setRandomPosition(0,0, this.scale.width, this.scale.height);
@@ -133,7 +130,6 @@ export default class MainScene extends Phaser.Scene {
 
     this.scoreCount += 1;
     this.scoreCountLabel.setText(this.scoreCount.toString());
-
   }
 
   // keyboard logic to move player
