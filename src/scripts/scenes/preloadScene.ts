@@ -1,8 +1,9 @@
 export default class PreloadScene extends Phaser.Scene {
-  instructionLabel: Phaser.GameObjects.Text;
+  instructionLabel: Phaser.GameObjects.BitmapText;
   cursorKeys: Phaser.Types.Input.Keyboard.CursorKeys;
   spacebar: Phaser.Input.Keyboard.Key;
-  instructions: string = "Use the arrow keys to move your spaceship,\nPress the spacebar to fire,\nAvoid the bombs,\n& SAVE THE GALAXY!";
+  instructions: string = "To fly your spaceship,\nUse the arrow keys,\nPress the spacebar to fire,\nAvoid the bombs,\n& SAVE THE GALAXY!";
+  background: Phaser.GameObjects.TileSprite;
 
   
   constructor() {
@@ -12,21 +13,24 @@ export default class PreloadScene extends Phaser.Scene {
   preload() {
     this.load_images();
     this.load_spritesheets();
+    this.load.bitmapFont("font", "assets/font/font.png", "assets/font/font.fnt");
   }
 
   create() {
-    this.add.text(10, this.scale.height / 2, this.instructions, {font: "12px Arial", fill: "black", align: "center"});
-    this.add.text(60, (this.scale.height / 2) + 100, "Press Spacebar to Begin!", {font: "12px Arial", fill: "black", align: "center"});
+    //this.instructionLabel = this.add.text(10, this.scale.height / 2, this.instructions, {font: "12px Arial", fill: "black", align: "center"});
+    this.background = this.add.tileSprite(0,0, this.scale.width, this.scale.height, "space_background");
+    this.background.setOrigin(0,0);    
+    this.instructionLabel = this.add.bitmapText(0, this.scale.height / 4, "font", this.instructions, 50, 1);
+    this.add.text(60, (this.scale.height / 2) + 100, "Press Spacebar to Begin!", {font: "12px Arial", fill: "white", align: "center"});
     this.cursorKeys = this.input.keyboard.createCursorKeys();
     this.spacebar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
     this.create_spritesheets();
-    
-    
-
   }
 
   update(){
+    this.background.tilePositionY -= 0.5;
     if(Phaser.Input.Keyboard.JustDown(this.spacebar)){
+      this.background.destroy();
       this.scene.start('MainScene');
     }
   }
