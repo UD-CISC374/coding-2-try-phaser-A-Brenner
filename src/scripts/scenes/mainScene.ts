@@ -3,7 +3,6 @@ import { timingSafeEqual } from 'crypto';
 import PreloadScene from './preloadScene';
 
 export default class MainScene extends Phaser.Scene {
-  private exampleObject: ExampleObject;
   background: Phaser.GameObjects.TileSprite;
   ship1: Phaser.GameObjects.Sprite;
   ship2: Phaser.GameObjects.Sprite;
@@ -18,8 +17,10 @@ export default class MainScene extends Phaser.Scene {
   beam: Phaser.GameObjects.Image;
   enter: Phaser.Input.Keyboard.Key;
   scoreLabel: Phaser.GameObjects.Text;
-  scoreCount: number;
+  scoreCount: number = 0;
   scoreCountLabel: Phaser.GameObjects.Text;
+  roundLabel: Phaser.GameObjects.Text;
+  roundCountLabel: Phaser.GameObjects.Text;
   round: number = 1;
 
 
@@ -28,36 +29,44 @@ export default class MainScene extends Phaser.Scene {
   }
 
   create() {
+    // set up background and labels
     this.background = this.add.tileSprite(0,0, this.scale.width, this.scale.height, "space_background");
     this.background.setOrigin(0,0);
     this.scoreLabel = this.add.text(0,0, "Score: ");
     this.scoreCount = 0;
     this.scoreCountLabel = this.add.text(60, 0, this.scoreCount.toString());
+    this.roundLabel = this.add.text(this.scale.width - 100, 0, "Round: ");
+    this.roundCountLabel = this.add.text(this.scale.width - 40, 0, this.round.toString());
 
+
+    // create groups for powerUps(bombs) and projectiles. Then create actual powerUps
     this.powerUps = this.physics.add.group();
     this.createPowerUpAnims(this.round);
+    this.projectiles = this.add.group(); // creates a group for projectiles
 
+
+    // create player
     this.player = this.physics.add.sprite(this.scale.width / 2 - 8, this.scale.height - 64, "thrust");
     this.player.flipY = true;
     this.player.play("thrust");
-    this.cursorKeys = this.input.keyboard.createCursorKeys();
     this.player.setCollideWorldBounds(true);
 
-
+    // keyboard input
+    this.cursorKeys = this.input.keyboard.createCursorKeys();
     this.enter = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
     this.spacebar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
-    this.projectiles = this.add.group();
+
 
     // adding collisions
     this.physics.add.collider(this.powerUps, this.powerUps);
     this.physics.add.overlap(this.player, this.powerUps, this.hurtPlayer, null, this);
-    this.physics.add.overlap(this.projectiles, this.powerUps, function(projectile, powerup){
+    this.physics.add.collider(this.projectiles, this.powerUps, function(projectile, powerup){
       projectile.destroy();
       powerup.destroy();
     }, null, this);
   }
 
-
+  // creates and spawns powerUps (bombs)
   createPowerUpAnims(numObjects){
     // put each powerup in a group
     let maxObjects: number = numObjects;
@@ -79,14 +88,15 @@ export default class MainScene extends Phaser.Scene {
     }
   }
 
-  /*
-  destroyShip(pointer, gameObject){
-    
-    gameObject.setTexture("explosion");
-    gameObject.play("explode");
+  // player has destroyed all enemies
+  // spawn new enemies, reward player, and up the round
+  nextRound(){
+    //this.add.text(this.scale.width - 200, this.scale.height - 100, "");
+    this.scoreCount += 100 * this.round;
+    this.round += 1;
+    this.roundCountLabel.setText(this.round.toString());
+    this.createPowerUpAnims(this.round * 2);
   }
-  */
-
 
   hurtPlayer(){
     this.scoreCount -= 10;
@@ -112,7 +122,6 @@ export default class MainScene extends Phaser.Scene {
 
   update() {
     this.background.tilePositionY -= 0.5;
-
     this.movePlayerManager();
 
     if (Phaser.Input.Keyboard.JustDown(this.spacebar)){
@@ -121,15 +130,17 @@ export default class MainScene extends Phaser.Scene {
     if (Phaser.Input.Keyboard.JustDown(this.enter)){
       this.respawnPlayer();
     }
-
     
     for(let i = 0; i < this.projectiles.getChildren().length; i++){
       let beam = this.projectiles.getChildren()[i];
       this.moveBeam(beam);
     }
-
     this.scoreCount += 1;
     this.scoreCountLabel.setText(this.scoreCount.toString());
+
+    if(this.powerUps.getChildren().length <= 0){
+      this.nextRound();
+    }
   }
 
   // keyboard logic to move player
