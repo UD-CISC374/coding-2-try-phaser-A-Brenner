@@ -59,11 +59,11 @@ export default class MainScene extends Phaser.Scene {
 
     // adding collisions
     this.physics.add.collider(this.powerUps, this.powerUps);
-    this.physics.add.overlap(this.player, this.powerUps, this.hurtPlayer, null, this);
+    this.physics.add.overlap(this.player, this.powerUps, this.hurtPlayer, function(){}, this);
     this.physics.add.collider(this.projectiles, this.powerUps, function(projectile, powerup){
       projectile.destroy();
       powerup.destroy();
-    }, null, this);
+    }, function(){}, this);
   }
 
   // creates and spawns powerUps (bombs)
@@ -145,18 +145,26 @@ export default class MainScene extends Phaser.Scene {
 
   // keyboard logic to move player
   movePlayerManager(){
-    if(this.cursorKeys.left.isDown){
-      this.player.setVelocityX(-200);
-      this.player.setVelocityY(0);
-    } else if(this.cursorKeys.right.isDown){
-      this.player.setVelocityX(200);
-      this.player.setVelocityY(0);
-    }else if(this.cursorKeys.up.isDown){
-      this.player.setVelocityY(-200);
-      this.player.setVelocityX(0);
-    }else if(this.cursorKeys.down.isDown){
-      this.player.setVelocityY(200);
-      this.player.setVelocityX(0);
+    if(this.cursorKeys.left !== undefined &&
+      this.cursorKeys.right !== undefined &&
+      this.cursorKeys.up !== undefined &&
+      this.cursorKeys.down !== undefined){
+      
+      if (this.cursorKeys.left.isDown){
+        this.player.setVelocityX(-200);
+        this.player.setVelocityY(0);
+      } else if(this.cursorKeys.right.isDown){
+        this.player.setVelocityX(200);
+        this.player.setVelocityY(0);
+      } else if(this.cursorKeys.up.isDown){
+        this.player.setVelocityY(-200);
+        this.player.setVelocityX(0);
+      } else if(this.cursorKeys.down.isDown){
+        this.player.setVelocityY(200);
+        this.player.setVelocityX(0);
+      }
+    } else {
+      console.log("Error: cursorKey is undefined");
     }
   } 
 

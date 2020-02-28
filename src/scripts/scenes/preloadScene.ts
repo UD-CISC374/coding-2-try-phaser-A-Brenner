@@ -52,15 +52,15 @@ export default class PreloadScene extends Phaser.Scene {
       repeat: -1
     });
     this.anims.create({
-      key: "explode", // creating animation called ship1_anim
+      key: "explode", // creating animation called explode
       frames: this.anims.generateFrameNumbers("explosion", {start: 0, end: 4}), // use spritesheet explosion
       frameRate: 20, // 20 frames per second
-      repeat: 0,
-      hideOnComplete: true
+      repeat: 0, // play once and then stop
+      hideOnComplete: true // hide final from of animation once completed
     });
     this.anims.create({
-      key: "thrust", // creating animation called ship1_anim
-      frames: this.anims.generateFrameNumbers("ship", {start: 0, end: 1}), // use spritesheet ship
+      key: "thrust", // creating animation called thrust
+      frames: this.anims.generateFrameNumbers("ship3", {start: 0, end: 1}), // use spritesheet ship
       frameRate: 20, // 20 frames per second
       repeat: -1, // infinite loop
     });
