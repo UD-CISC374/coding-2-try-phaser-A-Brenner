@@ -15,7 +15,6 @@ export default class PreloadScene extends Phaser.Scene {
   }
 
   create() {
-    this.add.text(0,0, "Loading Game...", {font: "25px Arial", fill: "black"});
     this.add.text(10, this.scale.height / 2, this.instructions, {font: "12px Arial", fill: "black", align: "center"});
     this.add.text(60, (this.scale.height / 2) + 100, "Press Spacebar to Begin!", {font: "12px Arial", fill: "black", align: "center"});
     this.cursorKeys = this.input.keyboard.createCursorKeys();
@@ -60,7 +59,13 @@ export default class PreloadScene extends Phaser.Scene {
     });
     this.anims.create({
       key: "thrust", // creating animation called thrust
-      frames: this.anims.generateFrameNumbers("ship3", {start: 0, end: 1}), // use spritesheet ship
+      frames: this.anims.generateFrameNumbers("ship2", {start: 0, end: 1}), // use spritesheet ship
+      frameRate: 20, // 20 frames per second
+      repeat: -1, // infinite loop
+    });
+    this.anims.create({
+      key: "laserSprite", // creating animation called thrust
+      frames: this.anims.generateFrameNumbers("laser-beam1", {start: 0, end: 0}), // use spritesheet ship
       frameRate: 20, // 20 frames per second
       repeat: -1, // infinite loop
     });
@@ -103,6 +108,11 @@ export default class PreloadScene extends Phaser.Scene {
       frameWidth: 16,
       frameHeight: 16
     });
+    this.load.spritesheet("laser-beam1", "assets/images/laser-beam1.png", {
+      frameWidth: 32,
+      frameHeight: 32
+    });
+
     /*
     this.load.spritesheet("explosion-trans", "assets/spritesheets/explosion-og.png", {
       frameWidth: 16,
