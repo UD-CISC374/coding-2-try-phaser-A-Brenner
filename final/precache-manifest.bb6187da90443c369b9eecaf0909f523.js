@@ -24,10 +24,6 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/coding-2-try-phaser-A-Brenner/finalassets/images/background.png"
   },
   {
-    "revision": "475001de4261a3cc9e18005973f3bae3",
-    "url": "/coding-2-try-phaser-A-Brenner/finalassets/images/colors.png"
-  },
-  {
     "revision": "e15bc93f0a49821000fc64968cdcdf57",
     "url": "/coding-2-try-phaser-A-Brenner/finalassets/images/laser-beam1.png"
   },
@@ -72,15 +68,15 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/coding-2-try-phaser-A-Brenner/finalassets/spritesheets/ship3.png"
   },
   {
-    "revision": "0734477a337513a76754",
-    "url": "/coding-2-try-phaser-A-Brenner/finalgen.main.cc2d7635bb2c5edfc516.bundle.js"
+    "revision": "ad6001bce04b256194b7",
+    "url": "/coding-2-try-phaser-A-Brenner/finalgen.main.76f733e69a4cd060db41.bundle.js"
   },
   {
     "revision": "201b65bee9df6270f739",
     "url": "/coding-2-try-phaser-A-Brenner/finalgen.vendors.a047ee0740c7d21714d9.bundle.js"
   },
   {
-    "revision": "ecc71eda8ba90b867df4124c420c1cd0",
+    "revision": "b990b7e16b54461114d3373281f23df7",
     "url": "/coding-2-try-phaser-A-Brenner/finalindex.html"
   },
   {
