@@ -173,8 +173,9 @@ export default class mainScene extends Phaser.Scene {
 
   shootBeam(){
     this.beam = this.add.image(this.player.x, this.player.y, "laser-beam1");
-    this.beam.setSize(10,35);
-    this.beam.setScale(0.05);
+    this.beam.setSize(15,30);
+    this.beam.setDisplaySize(15,30);
+    //this.beam.setScale(0.05);
     this.physics.add.existing(this.beam);
     this.projectiles.add(this.beam);
   }
