@@ -1,4 +1,4 @@
-importScripts("/coding-2-try-phaser-A-Brenner/finalprecache-manifest.bb6187da90443c369b9eecaf0909f523.js", "https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
+importScripts("/coding-2-try-phaser-A-Brenner/finalprecache-manifest.78d4a4012967dbd5471cacbb247f16f7.js", "https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 /**
  * You should only modify this, if you know what you are doing.
