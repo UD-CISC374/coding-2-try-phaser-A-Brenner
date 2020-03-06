@@ -2,7 +2,11 @@ import ExampleObject from '../objects/exampleObject';
 import { timingSafeEqual } from 'crypto';
 import PreloadScene from './preloadScene';
 
-export default class MainScene extends Phaser.Scene {
+/**
+ * MainScene
+ * 
+ */
+export default class mainScene extends Phaser.Scene {
   background: Phaser.GameObjects.TileSprite;
   ship1: Phaser.GameObjects.Sprite;
   ship2: Phaser.GameObjects.Sprite;
@@ -25,7 +29,7 @@ export default class MainScene extends Phaser.Scene {
 
 
   constructor() {
-    super({ key: 'MainScene' });
+    super({ key: 'mainScene' });
   }
 
   create() {
@@ -163,14 +167,13 @@ export default class MainScene extends Phaser.Scene {
         this.player.setVelocityY(200);
         this.player.setVelocityX(0);
       }
-    } else {
-      console.log("Error: cursorKey is undefined");
     }
   } 
 
 
   shootBeam(){
     this.beam = this.add.image(this.player.x, this.player.y, "laser-beam1");
+    this.beam.setSize(10,35);
     this.beam.setScale(0.05);
     this.physics.add.existing(this.beam);
     this.projectiles.add(this.beam);
