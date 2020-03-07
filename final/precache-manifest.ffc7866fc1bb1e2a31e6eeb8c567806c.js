@@ -76,7 +76,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/coding-2-try-phaser-A-Brenner/finalgen.vendors.a047ee0740c7d21714d9.bundle.js"
   },
   {
-    "revision": "c647739ac7b0c98efaf688f53ea7326b",
+    "revision": "186d408d8598624b3c75d118de86a135",
     "url": "/coding-2-try-phaser-A-Brenner/finalindex.html"
   },
   {
